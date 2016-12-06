@@ -12,7 +12,10 @@
         <f:view>
 
             <h:form>
-                <h1><h:outputText value="List"/></h1>
+                <div align="right"><h3><h:outputText value="Conectado #{controladorPrincipal.est.nombre} #{controladorPrincipal.est.apellido}"/></h3></div>
+                <h2><h:outputText value="usted pertenece a la facultad de #{controladorPrincipal.car.idFacultad.nombreFacultad}
+                y esta cursando la carrera #{controladorPrincipal.car.nombreCarrera}"/></h2>
+                <h2><h:outputText value="Lista Materias de #{controladorPrincipal.est.nombre} #{controladorPrincipal.est.apellido}"/></h2>
                 <p:dataTable value="#{controladorPrincipal.listaMateria}" var="item">
                     <p:column>
                         <f:facet name="header">

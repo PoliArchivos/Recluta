@@ -39,6 +39,10 @@ public class ControladorPrincipal implements Serializable{
     
     private Usuario usu;
     
+    private Carrera car;
+    
+    private Estudiante est;
+    
     private List<CarreraMateria> listaMateria;
 
     public ControladorPrincipal() {
@@ -48,25 +52,15 @@ public class ControladorPrincipal implements Serializable{
     public void verificarSesion(){
          Object o = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogin");
          Usuario u = (Usuario) o;
-         System.err.println("Usuario inicial");
-         System.err.println(u.getContrasena()+ " " + u.getIdUsuario()+ " " + 
-                                    u.getRol()+ " " + u.getUsuario());
          usu = su.consultarXId(Usuario.class, u.getIdUsuario());
-         System.err.println("Usuario Sec");
-         System.err.println(usu.getContrasena()+ " " + usu.getIdUsuario()+ " " + 
-                                    usu.getRol()+ " " + usu.getUsuario());
          if(usu != null){
-             System.err.println("Usuario no esta nulo");
-             Estudiante e = se.estudianteUsuario(usu);
-             Carrera  c = null;
-             if(e != null) { 
-                System.err.println("estudiante " + e.getNombre());
-                 c = e.getCarrera();
+             est = se.estudianteUsuario(usu);
+             car = null;
+             if(est != null) {
+                 car = est.getCarrera();
              }
-             if (c != null) { 
-                   System.err.println("Carrera " + c.getNombreCarrera() +" "+ c.getIdCarrera());
-                   listaMateria = scm.materiasXCarrera(c); 
-                   System.err.println("materia " + listaMateria.get(0).getIdCarrera().getNombreCarrera() + " " + listaMateria.get(0).getIdMateria().getIdMateria());
+             if (car != null) { 
+                   listaMateria = scm.materiasXCarrera(car); 
              }
          }
     }
@@ -90,6 +84,22 @@ public class ControladorPrincipal implements Serializable{
 
     public void setListaMateria(List<CarreraMateria> listaMateria) {
         this.listaMateria = listaMateria;
+    }
+
+    public Carrera getCar() {
+        return car;
+    }
+
+    public void setCar(Carrera car) {
+        this.car = car;
+    }
+
+    public Estudiante getEst() {
+        return est;
+    }
+
+    public void setEst(Estudiante est) {
+        this.est = est;
     }
 
     
