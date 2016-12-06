@@ -8,7 +8,6 @@ package Controlador;
 import entidades.Carrera;
 import entidades.CarreraMateria;
 import entidades.Estudiante;
-import entidades.Materia;
 import entidades.Usuario;
 import java.io.Serializable;
 import java.util.List;
@@ -40,7 +39,7 @@ public class ControladorPrincipal implements Serializable{
     
     private Usuario usu;
     
-    private List<Materia> listaMateria;
+    private List<CarreraMateria> listaMateria;
 
     public ControladorPrincipal() {
        usu = new Usuario();
@@ -49,11 +48,26 @@ public class ControladorPrincipal implements Serializable{
     public void verificarSesion(){
          Object o = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogin");
          Usuario u = (Usuario) o;
+         System.err.println("Usuario inicial");
+         System.err.println(u.getContrasena()+ " " + u.getIdUsuario()+ " " + 
+                                    u.getRol()+ " " + u.getUsuario());
          usu = su.consultarXId(Usuario.class, u.getIdUsuario());
+         System.err.println("Usuario Sec");
+         System.err.println(usu.getContrasena()+ " " + usu.getIdUsuario()+ " " + 
+                                    usu.getRol()+ " " + usu.getUsuario());
          if(usu != null){
+             System.err.println("Usuario no esta nulo");
              Estudiante e = se.estudianteUsuario(usu);
-             Carrera  c = e.getCarrera();
-             listaMateria = scm.materiasXCarrera(c);
+             Carrera  c = null;
+             if(e != null) { 
+                System.err.println("estudiante " + e.getNombre());
+                 c = e.getCarrera();
+             }
+             if (c != null) { 
+                   System.err.println("Carrera " + c.getNombreCarrera() +" "+ c.getIdCarrera());
+                   listaMateria = scm.materiasXCarrera(c); 
+                   System.err.println("materia " + listaMateria.get(0).getIdCarrera().getNombreCarrera() + " " + listaMateria.get(0).getIdMateria().getIdMateria());
+             }
          }
     }
 
@@ -70,12 +84,14 @@ public class ControladorPrincipal implements Serializable{
         this.usu = usu;
     }
 
-    public List<Materia> getListaMateria() {
+    public List<CarreraMateria> getListaMateria() {
         return listaMateria;
     }
 
-    public void setListaMateria(List<Materia> listaMateria) {
+    public void setListaMateria(List<CarreraMateria> listaMateria) {
         this.listaMateria = listaMateria;
     }
+
+    
  
 }

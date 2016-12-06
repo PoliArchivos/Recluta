@@ -20,7 +20,7 @@ import javax.persistence.NamedQuery;
  */
 @Entity
 @NamedQuery(name = "CarreraMateria.materiaXcarrera",
-               query = "SELECT m FROM CarreraMateria m WHERE m.idCarrera = :carrera")
+               query = "SELECT m FROM CarreraMateria m WHERE m.idCarrera.idCarrera = :carrera")
 public class CarreraMateria implements Serializable {
 
     private static final long serialVersionUID = 1L;
