@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/appTemplate.xhtml">
+
+            <ui:define name="content">
+                <f:view>
+                    <h:form id="tblsDatos">
+                        <p:growl autoUpdate="true"/>
+                        <p:dataTable value="#{controladorCarrera.listaCarrera}" var="item">
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Codigo Carrera"/>
+                                </f:facet>
+                                <h:outputText value="#{item.idCarrera}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Carrera"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nombreCarrera}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Facultad"/>
+                                </f:facet>
+                                <h:outputText value="#{item.idFacultad.nombreFacultad}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Acciones"/>
+                                </f:facet>
+                                <p:commandButton actionListener="#{controladorCarrera.seleccionarCarrera(item)}" 
+                                                 icon="ui-icon-search" title="Ver Carrera" 
+                                                 onclick="PF('dtoCarrera').show()"
+                                                 update=":datosCarrera:dtsCarrera"
+                                                 />
+                                <p:commandButton actionListener="#{controladorCarrera.seleccionarCarrera(item)}" 
+                                                 title="Modficar Carrera" 
+                                                 onclick="PF('mdfCarrera').show()"
+                                                 update=":modificarCarrera:modCarrera"
+                                                 icon="ui-icon-pencil"/>
+                                <p:commandButton actionListener="#{controladorCarrera.eliminarCarrera(item)}" 
+                                                 icon="ui-icon-trash" title="Eliminar" >
+                                    <p:confirm header="Confirmation" message="esta seguro que quieres eliminar la carrera, #{item.nombreCarrera.toUpperCase()}?" icon="ui-icon-alert" />
+                                </p:commandButton>
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                </p:confirmDialog>
+                            </p:column>
+                        </p:dataTable>
+                        <p:separator/>
+                        <p:commandButton value="Registrar" title="Registrar Carrera" icon="ui-icon-plusthick" 
+                                         onclick="PF('rgtCarrera').show()"/>
+                    </h:form>
+
+                    <!-- FORMULARIO PARA VER LA CARRERA -->
+                    <h:form id="datosCarrera">
+                        <p:dialog widgetVar="dtoCarrera" header="Datos de la Carrera"
+                                  footer="Politecnico Jaime Isaza" modal="true"  resizable="false">
+                            <h:panelGrid  id="dtsCarrera" columns="2">
+                                <p:outputLabel value="Codigo:" for="codigo" />
+                                <p:outputLabel id="codigo" value="#{controladorCarrera.ca.idCarrera}" title="Codigo" />
+                                <p:outputLabel value="Carrera:" for="nombre" />
+                                <p:outputLabel  id="nombre" value="#{controladorCarrera.ca.nombreCarrera}" title="Nombre" />
+                                <p:outputLabel value="Facultad:" for="facultad" />
+                                <p:outputLabel  id="facultad" value="#{controladorCarrera.ca.idFacultad.nombreFacultad}" title="facultad" />
+                            </h:panelGrid>
+                        </p:dialog>
+                    </h:form>
+                    <!-- ******************************************************************* -->
+
+                    <!-- FOMRULARIO PARA MODIFICAR CARRERA-->
+                    <h:form id="modificarCarrera">
+                        <p:dialog widgetVar="mdfCarrera" header="Datos de la Carrera"
+                                  footer="Politecnico Jaime Isaza" modal="true" resizable="false">
+                            <h:panelGrid  id="modCarrera" columns="2">
+                                <p:outputLabel value="Codigo:" for="codigo" />
+                                <p:inputText id="codigo" value="#{controladorCarrera.ca.idCarrera}" title="Codigo"  disabled="true"/>
+                                <p:outputLabel value="Nombre:" for="nombre"/>
+                                <p:inputText  id="nombre" value="#{controladorCarrera.ca.nombreCarrera}" title="Nombre" required="true" 
+                                              requiredMessage="Debe ingresar el nombre!"/>
+                                <p:outputLabel value="Facultad:" for="idFacultad" />
+                                <p:selectOneMenu id="idFacultad" value="#{controladorCarrera.facultad.idFacultad}" title="IdFacultad" >
+                                    <f:selectItem itemLabel="Seleccione" itemDisabled="true"/>
+                                    <f:selectItems value="#{controlador.listaFac}" var="facultad"
+                                                   itemLabel="#{facultad.nombreFacultad}" itemValue="#{facultad.idFacultad}"/>
+                                </p:selectOneMenu>
+                                <p:commandButton value="Cancelar" type="reset"
+                                                 onclick="PF('mdfCarrera').hide()"
+                                                 icon="ui-icon-closethick" />
+                                <p:commandButton actionListener="#{controladorCarrera.modificarCarrera(ca)}"
+                                                 value="Guardar" update=":tblsDatos"
+                                                 onclick="PF('mdfCarrera').hide()" 
+                                                 icon="ui-icon-disk"/>
+                            </h:panelGrid>
+                        </p:dialog>
+                    </h:form>
+                    <!-- ******************************************************+ -->
+                    <!-- FORMULARIO PARA REGISTRO DE CARRERAS -->
+                    <h:form>
+                        <p:dialog widgetVar="rgtCarrera" header="Registrar Carrera"
+                                  footer="Politecnico Jaime Isaza" modal="true" resizable="false">
+                            <h:panelGrid  id="regCarrera" columns="2">
+                                <p:outputLabel value="Nombre Carrera:" for="nombre" />
+                                <p:inputText  id="nombre" value="#{controladorCarrera.nombre}" title="Nombre" required="true" 
+                                              requiredMessage="Debe ingresar el nombre!" />
+                                <p:outputLabel value="Facultad:" for="idFacultad" />
+                                <p:selectOneMenu id="idFacultad" value="#{controladorCarrera.facultad.idFacultad}" title="IdFacultad" >
+                                    <f:selectItem itemLabel="Seleccione" itemDisabled="true"/>
+                                    <f:selectItems value="#{controlador.listaFac}" var="facultad"
+                                                   itemLabel="#{facultad.nombreFacultad}" itemValue="#{facultad.idFacultad}"/>
+                                </p:selectOneMenu>
+                                <p:commandButton value="Cancelar" type="reset"
+                                                 onclick="PF('rgtCarrera').hide()"
+                                                 icon="ui-icon-closethick" />
+                                <p:commandButton actionListener="#{controladorCarrera.registrar()}"
+                                                 value="Guardar" update=":tblsDatos"
+                                                 onclick="PF('rgtCarrera').hide()"
+                                                 icon="ui-icon-disk" />
+                            </h:panelGrid>
+                        </p:dialog>
+                    </h:form>
+                    <!-- ***********************************************-->
+                </f:view>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

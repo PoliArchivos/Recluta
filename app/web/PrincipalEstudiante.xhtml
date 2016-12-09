@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="./WEB-INF/estudiantesTemplate.xhtml">
+            <ui:define name="content">  
+                <f:view>
+                    <h:form>
+                        <h:panelGrid columns="2">
+                            <h:outputLabel value="Facultad: "/>
+                            <h:outputLabel value="#{controladorPrincipal.car.idFacultad.nombreFacultad}"/>
+                            <h:outputLabel value="Carrera: "/>
+                            <h:outputLabel value="#{controladorPrincipal.car.nombreCarrera}"/>
+                        </h:panelGrid>
+                        <p:dataTable value="#{controladorPrincipal.listaMateria}" var="item">
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Codigo Materia"/>
+                                </f:facet>
+                                <h:outputText value="#{item.idMateria}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Materia"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nombreMateria}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </f:view>    
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

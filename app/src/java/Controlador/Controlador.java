@@ -6,8 +6,10 @@
 package Controlador;
 
 import entidades.Facultad;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -32,6 +34,8 @@ public class Controlador implements Serializable {
     private int id;
     
     private List<Facultad> listaFac;
+    
+    private String nombreViejo;
 
     public Controlador() {
         fac = new Facultad();
@@ -46,18 +50,53 @@ public class Controlador implements Serializable {
         listaFac = sf.listar(Facultad.class);
     }
     
-    public void registrar(){
-        
+    public void registrar() throws IOException{
+        Facultad f = sf.facultadXnombre(fac);
+        if(f == null){
         fac.setIdFacultad(id);
         sf.guardar(fac);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("SE registro exitosamente"));
-        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Se registro exitosamente"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("GestionFacultad.xhtml");
         fac = new Facultad();
+        }else{
+          FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Ya hay una facultad con el nombre "+fac.getNombreFacultad()));  
+        }
     }
 
     private void gestion_id(){
         id = listaFac.size();
     }
+    
+    public void seleccionarFacultad(Facultad facultad){
+        this.fac = facultad;
+        this.nombreViejo = facultad.getNombreFacultad();
+    }
+    
+    public void modificarFacultad(Facultad fa) {
+        Facultad f = sf.facultadXnombre(fac);
+        if (f == null) {
+            sf.actualizar(fac);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("el nombre de la facultad fue actualizado"));
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Ya hay una facultad con el nombre " + fac.getNombreFacultad() + ", por favor ingrese otro"));
+            fac.setNombreFacultad(nombreViejo);
+        }
+    }
+    
+    public void elminarFacultad(Facultad fc) throws IOException{
+        Facultad facultad = sf.facultadXnombre(fc);
+        if (facultad != null) {
+            sf.eliminar(Facultad.class, facultad.getIdFacultad());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("la facultad: " + facultad.getNombreFacultad().toUpperCase() + " fue eliminado exitosamente"));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("GestionFacultad.xhtml");
+
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("la facultad: " + fc.getNombreFacultad() + " no se encuentra registrado en el sistema"));
+        }
+    }
+    
     public Facultad getFac() {
         return fac;
     }
@@ -82,5 +121,11 @@ public class Controlador implements Serializable {
         this.id = id;
     }
 
-    
+    public String getNombreViejo() {
+        return nombreViejo;
+    }
+
+    public void setNombreViejo(String nombreViejo) {
+        this.nombreViejo = nombreViejo;
+    }
 }

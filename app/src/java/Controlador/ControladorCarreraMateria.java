@@ -37,6 +37,7 @@ public class ControladorCarreraMateria implements Serializable{
     private Carrera ca;
     
     private Materia ma;
+    private int idu;
     
     /**
      * Creates a new instance of ControladorCarreraMateria
@@ -54,7 +55,9 @@ public class ControladorCarreraMateria implements Serializable{
         if(c != null && m != null){
            cm.setIdCarrera(ca);
            cm.setIdMateria(ma);
-           scm.guardar(ma);
+           idu = (int) (Math.random() * 10000) + 1;
+           cm.setIdCarreraMateria(idu);
+           scm.guardar(cm);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Se registro exitosamente"));
         }else{
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("facultad nula"));
@@ -84,6 +87,14 @@ public class ControladorCarreraMateria implements Serializable{
 
     public void setMa(Materia ma) {
         this.ma = ma;
+    }
+
+    public int getIdu() {
+        return idu;
+    }
+
+    public void setIdu(int idu) {
+        this.idu = idu;
     }
     
 }

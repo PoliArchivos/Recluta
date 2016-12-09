@@ -42,7 +42,7 @@ public class userLogin implements Serializable {
                     FacesContext.getCurrentInstance().getExternalContext().redirect("Administracion.xhtml");
                 } else {
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuarioLogin", u);
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("Principal.xhtml");
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("PrincipalEstudiante.xhtml");
                 }
 
             } else {
@@ -53,9 +53,10 @@ public class userLogin implements Serializable {
         }
     }
     
-    public void cerrarSesion(){
+    public void cerrarSesion() throws IOException{
         if(us != null){
-        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("usuarioLogin");
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("usuarioLogin");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
         }
     }
 

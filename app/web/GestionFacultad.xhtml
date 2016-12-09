@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./WEB-INF/appTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <f:view>
+
+
+            <h:form id="tblsDatos">
+                <p:growl autoUpdate="true"/>
+                <p:dataTable value="#{controlador.listaFac}" var="item">
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Codigo Facultad"/>
+                        </f:facet>
+                        <h:outputText value="#{item.idFacultad}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nombre Facultad"/>
+                        </f:facet>
+                        <h:outputText value="#{item.nombreFacultad}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Acciones"/>
+                        </f:facet>
+                        <p:commandButton actionListener="#{controlador.seleccionarFacultad(item)}" 
+                                         icon="ui-icon-search" title="Ver Facultad" 
+                                         onclick="PF('dtoFacultad').show()"
+                                         update=":datosFacultad:dtsFacultad"
+                                        />
+                        <p:commandButton actionListener="#{controlador.seleccionarFacultad(item)}" 
+                                         title="Modficar Facultad" 
+                                         onclick="PF('mdfFacultad').show()"
+                                         update=":modificarFacultad:modFacultad"
+                                         icon="ui-icon-pencil"/>
+                        <p:commandButton actionListener="#{controlador.elminarFacultad(item)}" 
+                                         icon="ui-icon-trash" title="Eliminar" >
+                            <p:confirm header="Confirmation" message="esta seguro que quieres eliminar la facultad, #{item.nombreFacultad.toUpperCase()}?" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+                <p:separator/>
+                <p:commandButton value="Registrar" title="Registrar Facultad" icon="ui-icon-plusthick" 
+                                             onclick="PF('rgtFacultad').show()"/>
+            </h:form>
+            
+            <!-- FORMULARIO PARA VER LA FACULTAD -->
+                    <h:form id="datosFacultad">
+                        <p:dialog widgetVar="dtoFacultad" header="Datos de la facultad"
+                                  footer="Politecnico Jaime Isaza" modal="true"  resizable="false">
+                            <h:panelGrid  id="dtsFacultad" columns="2">
+                                <p:outputLabel value="Codigo Facultad:" for="codigo" />
+                                <p:outputLabel id="codigo" value="#{controlador.fac.idFacultad}" title="Codigo" />
+                                <p:outputLabel value="Nombre Facultad:" for="nombre" />
+                                <p:outputLabel  id="nombre" value="#{controlador.fac.nombreFacultad.toUpperCase()}" title="Nombre" />   
+                            </h:panelGrid>
+                        </p:dialog>
+                    </h:form>
+                    <!-- ******************************************************************* -->
+                    
+                     <!-- FOMRULARIO PARA MODIFICAR FACULTAD -->
+                    <h:form id="modificarFacultad">
+                        <p:dialog widgetVar="mdfFacultad" header="Datos de la Facultad"
+                                  footer="Politecnico Jaime Isaza" modal="true" resizable="false">
+                            <h:panelGrid  id="modFacultad" columns="2">
+                                <p:outputLabel value="Codigo Facultad:" for="codigo" />
+                                <p:inputText id="codigo" value="#{controlador.fac.idFacultad}" title="Codigo"  disabled="true"/>
+                                <p:outputLabel value="Nombre Facultad:" for="nombre" />
+                                <p:inputText  id="nombre" value="#{controlador.fac.nombreFacultad}" title="Nombre" required="true" 
+                                              requiredMessage="Debe ingresar el nombre de la facultad!"/> 
+                                <p:commandButton value="Cancelar" type="reset"
+                                                 onclick="PF('mdfFacultad').hide()"
+                                                 icon="ui-icon-closethick" />
+                                <p:commandButton actionListener="#{controlador.modificarFacultad(fac)}"
+                                                 value="Guardar" update=":tblsDatos"
+                                                 onclick="PF('mdfFacultad').hide()" 
+                                                 icon="ui-icon-disk"/>
+                            </h:panelGrid>
+                        </p:dialog>
+                    </h:form>
+                    <!-- ******************************************************+ -->
+                    <!-- FORMULARIO PARA REGISTRO DE FACULTADES -->
+                    <h:form>
+                        <p:dialog widgetVar="rgtFacultad" header="Registrar Facultad"
+                                  footer="Politecnico Jaime Isaza" modal="true" resizable="false">
+                            <h:panelGrid  id="regFacultad" columns="2">
+                                <p:outputLabel value="Nombre Facultad:" for="nombre" />
+                                <p:inputText  id="nombre" value="#{controlador.fac.nombreFacultad}" title="Nombre" required="true" 
+                                              requiredMessage="Debe ingresar el nombre!" />
+                                <p:commandButton value="Cancelar" type="reset"
+                                                 onclick="PF('rgtFacultad').hide()"
+                                                 icon="ui-icon-closethick" />
+                                <p:commandButton actionListener="#{controlador.registrar()}"
+                                                 value="Guardar" update=":tblsDatos"
+                                                 onclick="PF('rgtEquipo').hide()"
+                                                 icon="ui-icon-disk" />
+                            </h:panelGrid>
+                        </p:dialog>
+                    </h:form>
+                    <!-- ***********************************************-->
+        </f:view>
+
+    </ui:define>
+
+</ui:composition>

@@ -6,8 +6,8 @@
 package Controlador;
 
 import entidades.Carrera;
-import entidades.CarreraMateria;
 import entidades.Estudiante;
+import entidades.Materia;
 import entidades.Usuario;
 import java.io.Serializable;
 import java.util.List;
@@ -43,12 +43,17 @@ public class ControladorPrincipal implements Serializable{
     
     private Estudiante est;
     
-    private List<CarreraMateria> listaMateria;
+    private List<Materia> listaMateria;
 
     public ControladorPrincipal() {
        usu = new Usuario();
     }
-
+    
+    @PostConstruct
+    private void init(){
+        verificarSesion();
+    }
+    
     public void verificarSesion(){
          Object o = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogin");
          Usuario u = (Usuario) o;
@@ -56,18 +61,9 @@ public class ControladorPrincipal implements Serializable{
          if(usu != null){
              est = se.estudianteUsuario(usu);
              car = null;
-             if(est != null) {
-                 car = est.getCarrera();
-             }
-             if (car != null) { 
-                   listaMateria = scm.materiasXCarrera(car); 
-             }
+             car = est.getCarrera();
+             listaMateria = scm.materiasXCarrera(car); 
          }
-    }
-
-    @PostConstruct
-    public void inicio(){
-        verificarSesion();
     }
     
     public Usuario getUsu() {
@@ -78,11 +74,11 @@ public class ControladorPrincipal implements Serializable{
         this.usu = usu;
     }
 
-    public List<CarreraMateria> getListaMateria() {
+    public List<Materia> getListaMateria() {
         return listaMateria;
     }
 
-    public void setListaMateria(List<CarreraMateria> listaMateria) {
+    public void setListaMateria(List<Materia> listaMateria) {
         this.listaMateria = listaMateria;
     }
 
@@ -101,7 +97,4 @@ public class ControladorPrincipal implements Serializable{
     public void setEst(Estudiante est) {
         this.est = est;
     }
-
-    
- 
 }
